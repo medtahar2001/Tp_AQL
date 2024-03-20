@@ -16,6 +16,7 @@ class PalindromeTest {
     }
     @Test
     void StringNull(){
+        assertThrows(NullPointerException.class , () -> {Palindrome.isPalindrome(null);});
 
 
     }
