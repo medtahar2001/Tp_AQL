@@ -6,6 +6,7 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import static org.mockito.Mockito.*;
+
 @RunWith(MockitoJUnitRunner.class)
 public class UserServiceTest {
     @Mock
@@ -13,11 +14,9 @@ public class UserServiceTest {
     @Test
     public void testCreerUtilisateurEx2() throws ServiceException {
         // Création d'un nouvel utilisateur
-        Utilisateur utilisateur = new Utilisateur("Jean", "Dupont",
-                "jeandupont@email.com");
-        // TODO : Configuration du comportement du mock, utiliser la
-           //directive « when » avec sa méthode « thenReturn »
-          doNothing().when(utilisateurApiMock).creerUtilisateur(utilisateur);
+        Utilisateur utilisateur = new Utilisateur("Jean", "Dupont", "jeandupont@email.com");
+        // TODO : Configuration du comportement du mock, utiliser la directive « when » avec sa méthode « thenReturn »
+       when(utilisateurApiMock.creerUtilisateur(utilisateur)).thenReturn(true);
         // TODO : Création du service avec le mock
            UserService userService=new UserService(utilisateurApiMock);
         // TODO : Appel de la méthode à tester
@@ -29,16 +28,11 @@ public class UserServiceTest {
     @Test
     public void testCreerUtilisateur_Exce_exo31() throws ServiceException {
         // Config du comport du mock pour lever une exception ServiceException
-        doThrow(new ServiceException("Echec de la création de l'utilisateur")).when(utilisateurApiMock).creerUtilisateur(any(Utilisateur.class));
-
-        UserService userService = new UserService(utilisateurApiMock);
         Utilisateur utilisateur = new Utilisateur("Jean", "Dupont", "jeandupont@email.com");
+        when(utilisateurApiMock.creerUtilisateur(utilisateur)).thenThrow(new ServiceException("echec"));
+        UserService userService = new UserService(utilisateurApiMock);
+         userService.creerUtilisateur(utilisateur);
 
-        try {
-            userService.creerUtilisateur(utilisateur);
-        } catch (ServiceException e) {
-           assert e.getMessage() != null && e.getMessage().equals("Echec de la création de l'utilisateur");
-        }
     }
     @Test
     public void testCreerUtilisateur_Validation_Err_exo32() throws ServiceException {
